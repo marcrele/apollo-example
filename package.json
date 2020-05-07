@@ -1,0 +1,21 @@
+{
+  "name": "apollo-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "offline": "serverless offline start --printOutput"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "serverless-offline": "^6.1.5"
+  },
+  "dependencies": {
+    "apollo-server-lambda": "^2.13.0",
+    "gql": "^1.1.2",
+    "graphql-tools": "^5.0.0"
+  }
+}

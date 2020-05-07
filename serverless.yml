@@ -1,0 +1,24 @@
+service: apollo-example
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  region: eu-west-1
+
+custom:
+  serverless-offline:
+    host: 0.0.0.0 # important to reach localhost from outside the docker container  
+    httpPort: 15000 # 3000 and 3002 are taken
+
+functions:
+  graphql:
+    handler: handler.graphqlHandler
+    events:
+    - http:
+        path: graphql
+        method: post
+        cors: true
+      

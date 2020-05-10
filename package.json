@@ -11,7 +11,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "serverless-offline": "^6.1.5"
+    "serverless-offline": "^6.1.5",
+    "serverless-dynamodb-local": "^0.2.39"
   },
   "dependencies": {
     "apollo-server-lambda": "^2.13.0",

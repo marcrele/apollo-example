@@ -2,16 +2,44 @@ service: apollo-example
 
 plugins:
   - serverless-offline
+  - serverless-dynamodb-local
 
 provider:
   name: aws
   runtime: nodejs10.x
   region: eu-west-1
+  environment: ${self:custom.settings.${self:custom.myStage}}
 
 custom:
   serverless-offline:
     host: 0.0.0.0 # important to reach localhost from outside the docker container  
     httpPort: 15000 # 3000 and 3002 are taken
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 15001
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+    seed:
+      domain:
+        sources:
+          - table: ${self:custom.settings.${self:custom.myStage}.AUTHORS_TABLE}
+            sources: [./authorSeed.json]
+          - table: ${self:custom.settings.${self:custom.myStage}.BOOKS_TABLE}
+            sources: [./bookSeed.json]
+  myStage: ${opt:stage, self:provider.stage}
+  settings:
+    dev:
+      AUTHORS_TABLE: authors-dev
+      BOOKS_TABLE: books-dev
+    prod:
+      AUTHORS_TABLE: authors-prod
+      BOOKS_TABLE: books-prod
 
 functions:
   graphql:
@@ -21,4 +49,32 @@ functions:
         path: graphql
         method: post
         cors: true
-      
+
+resources:
+  Resources:
+    authorsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.settings.${self:custom.myStage}.AUTHORS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: authorId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: authorId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    booksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.settings.${self:custom.myStage}.BOOKS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: bookId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: bookId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1  

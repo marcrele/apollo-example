@@ -1,30 +1,25 @@
 const { ApolloServer, gql } = require('apollo-server-lambda');
 const { makeExecutableSchema } = require('graphql-tools');
+const databaseManager = require('./databaseManager');
 
 // The GraphQL schema in string form
 const typeDefs = gql `
-  type Book { title: String, author: String }
+  type Book { title: String, authors: [Author] }
+  type Author { name: String, books: [Book] }
   type Query {
     hello: String
     books: [Book]
+    book(bookId: String!): Book
+    author: Author
   }
 `;
-
-// Some fake data
-const mockBooks = [{
-    title: "Harry Potter and the Sorcerer's stone",
-    author: 'J.K. Rowling',
-  },
-  {
-    title: 'Jurassic Park',
-    author: 'Michael Crichton',
-  },
-];
 
 // The resolvers
 const resolvers = {
   Query: {
-    books: () => mockBooks,
+    books: () => databaseManager.getBooks(),
+    book: (_source, { bookId }) => databaseManager.getBook(bookId),
+    author: () => databaseManager.getAuthor(),
     hello: () => 'Hello world!'
   },
 };

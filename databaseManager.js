@@ -15,49 +15,24 @@ module.exports.initializateDynamoClient = newDynamo => {
   dynamo = newDynamo;
 };
 
-module.exports.getBook = () => {
+module.exports.getAuthor = ({ id }) => {
   const params = {
     Key: {
-      bookId: "1"
-    },
-    TableName: BOOKS_TABLE_NAME
-  };
-
-  console.log("result item");
-  return dynamo.get(params).promise().then(result => {
-    console.log("result item");
-    return result.Item;
-  });
-};
-
-module.exports.getAuthor = (authorId) => {
-  const params = {
-    Key: {
-      authorId
+      id
     },
     TableName: AUTHORS_TABLE_NAME
   };
-
-  return dynamo.get(params).promise().then(result => {
-    const author = result.Item;
-
-    return author;
-  });
+  return dynamo.get(params).promise().then(result => result.Item);
 };
 
-module.exports.getBook = (bookId) => {
+module.exports.getBook = ({ id }) => {
   const params = {
     Key: {
-      bookId
+      id
     },
     TableName: BOOKS_TABLE_NAME
   };
-
-  return dynamo.get(params).promise().then(result => {
-    const book = result.Item;
-    book.authors = book.authors.map(authorId => this.getAuthor(authorId));
-    return book;
-  });
+  return dynamo.get(params).promise().then(result => result.Item);
 };
 
 module.exports.getBooks = () => {

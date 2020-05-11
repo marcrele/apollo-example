@@ -1,27 +1,21 @@
-const { ApolloServer, gql } = require('apollo-server-lambda');
+const { ApolloServer } = require('apollo-server-lambda');
+const typeDefs = require('./schema');
 const { makeExecutableSchema } = require('graphql-tools');
 const databaseManager = require('./databaseManager');
-
-// The GraphQL schema in string form
-const typeDefs = gql `
-  type Book { title: String, authors: [Author] }
-  type Author { name: String, books: [Book] }
-  type Query {
-    hello: String
-    books: [Book]
-    book(bookId: String!): Book
-    author: Author
-  }
-`;
 
 // The resolvers
 const resolvers = {
   Query: {
     books: () => databaseManager.getBooks(),
-    book: (_source, { bookId }) => databaseManager.getBook(bookId),
-    author: () => databaseManager.getAuthor(),
-    hello: () => 'Hello world!'
+    book: (_, { id }) => databaseManager.getBook({ id }),
+    author: (_, { id }) => databaseManager.getAuthor({ id })
   },
+  Book: {
+    authors: (source) => source.authors.map(authorId => databaseManager.getAuthor({ id: authorId }))
+  },
+  Author: {
+    books: (source) => source.books.map(bookId => databaseManager.getBook({ id: bookId }))
+  }
 };
 
 const schema = makeExecutableSchema({
@@ -31,7 +25,6 @@ const schema = makeExecutableSchema({
 
 const server = new ApolloServer({
   schema,
-
   // By default, the GraphQL Playground interface and GraphQL introspection
   // is disabled in "production" (i.e. when `process.env.NODE_ENV` is `production`).
   //

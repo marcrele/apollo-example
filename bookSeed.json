@@ -1,11 +1,11 @@
 [{
-    "bookId": "1",
+    "id": "1",
     "title": "Harry Potter and the Sorcerer's stone",
     "authors": ["1"]
   },
   {
-    "bookId": "2",
+    "id": "2",
     "title": "Jurassic Park",
-    "authors": ["2", "3"]
+    "authors": ["2"]
   }
 ]

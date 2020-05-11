@@ -1,13 +1,16 @@
 [{
-    "authorId": "1",
-    "name": "J.K. Rowling"
+    "id": "1",
+    "name": "J.K. Rowling",
+    "books": ["1"]
   },
   {
-    "authorId": "2",
-    "name": "Michael Crichton"
+    "id": "2",
+    "name": "Michael Crichton",
+    "books": ["2"]
   },
   {
-    "authorId": "3",
-    "name": "Michael Jackson"
+    "id": "3",
+    "name": "Michael Jackson",
+    "books": ["3"]
   }
 ]

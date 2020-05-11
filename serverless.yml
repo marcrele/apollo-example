@@ -57,10 +57,10 @@ resources:
       Properties:
         TableName: ${self:custom.settings.${self:custom.myStage}.AUTHORS_TABLE}
         AttributeDefinitions:
-          - AttributeName: authorId
+          - AttributeName: id
             AttributeType: S
         KeySchema:
-          - AttributeName: authorId
+          - AttributeName: id
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
@@ -70,10 +70,10 @@ resources:
       Properties:
         TableName: ${self:custom.settings.${self:custom.myStage}.BOOKS_TABLE}
         AttributeDefinitions:
-          - AttributeName: bookId
+          - AttributeName: id
             AttributeType: S
         KeySchema:
-          - AttributeName: bookId
+          - AttributeName: id
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1

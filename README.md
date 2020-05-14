@@ -2,6 +2,7 @@
 
 helping sources
 
+https://www.howtographql.com/basics/0-introduction/
 https://www.apollographql.com/docs/tutorial/introduction/
 https://www.apollographql.com/docs/apollo-server/security/authentication/
 https://graphql.org/learn/queries/

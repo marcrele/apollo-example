@@ -29,14 +29,15 @@ custom:
       domain:
         sources:
           - table: ${self:custom.settings.${self:custom.myStage}.AUTHORS_TABLE}
-            sources: [./authorSeed.json]
+            sources: [./mock/authorSeed.json]
           - table: ${self:custom.settings.${self:custom.myStage}.BOOKS_TABLE}
-            sources: [./bookSeed.json]
+            sources: [./mock/bookSeed.json]
   myStage: ${opt:stage, self:provider.stage}
   settings:
     dev:
       AUTHORS_TABLE: authors-dev
       BOOKS_TABLE: books-dev
+      IS_OFFLINE: true
     prod:
       AUTHORS_TABLE: authors-prod
       BOOKS_TABLE: books-prod

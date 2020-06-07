@@ -15,7 +15,7 @@
     "serverless-dynamodb-local": "^0.2.39"
   },
   "dependencies": {
-    "apollo-server-lambda": "^2.13.0",
+    "apollo-server-lambda": "^2.14.2",
     "gql": "^1.1.2",
     "graphql-tools": "^5.0.0",
     "jose": "^1.27.0",

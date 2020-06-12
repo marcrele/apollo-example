@@ -9,7 +9,18 @@ provider:
   runtime: nodejs10.x
   region: eu-west-1
   environment: ${self:custom.settings.${self:custom.myStage}}
-
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:Scan"
+        - "dynamodb:GetItem"
+        - "dynamodb:PutItem"
+        - "dynamodb:UpdateItem"
+        - "dynamodb:DeleteItem"
+        - "dynamodb:ListStreams"
+      Resource:
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.settings.${self:custom.myStage}.AUTHORS_TABLE}"
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.settings.${self:custom.myStage}.BOOKS_TABLE}"
 custom:
   serverless-offline:
     host: 0.0.0.0 # important to reach localhost from outside the docker container  
@@ -41,6 +52,10 @@ custom:
     prod:
       AUTHORS_TABLE: authors-prod
       BOOKS_TABLE: books-prod
+  auth:
+    type: COGNITO_USER_POOLS
+    authorizerId:
+      Ref: ApolloExampleAuth
 
 functions:
   graphql:
@@ -50,9 +65,31 @@ functions:
         path: graphql
         method: post
         cors: true
+        authorizer: ${self:custom.auth}
 
 resources:
   Resources:
+    ApolloExampleCognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: wishy-prod
+    ApolloExampleCognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: wishy-fe
+        GenerateSecret: false
+        UserPoolId:
+          Ref: "ApolloExampleCognitoUserPool"
+    ApolloExampleAuth:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        Name: ApolloExampleCognitoUserPool
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Type: COGNITO_USER_POOLS
+        ProviderARNs:
+          - Fn::GetAtt: [ ApolloExampleCognitoUserPool, Arn ]
+        IdentitySource: method.request.header.Authorization
     authorsTable:
       Type: AWS::DynamoDB::Table
       Properties:
